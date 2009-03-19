@@ -30,6 +30,7 @@ As there is no options page (yet), you will need to edit the `/wp-content/plugin
 
 `$display_mode = 'mouseover';`
 to
+
 `$display_mode = 'parentheses';`
 
 = Does it really require WordPress 2.7? =
