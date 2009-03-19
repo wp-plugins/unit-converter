@@ -1,0 +1,320 @@
+<?php
+/*
+Plugin Name: Unit Converter
+Plugin URI: http://miknight.com/projects/unit-converter
+Description: Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
+Version: 0.1
+Author: Michael Knight
+Author URI: http://miknight.com
+
+Copyright 2009 Michael Knight <mike@nerdforce.net>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+class UnitConverter
+{
+	private $units = array();
+	private $maps = array();
+	private $display_mode = 'mouseover';
+
+	/**
+	 * Sets up conversion units and alias mappings.
+	 */
+	public function __construct()
+	{
+		// Kilograms <-> Pounds
+		$this->addConversion('kilogram', 'pound', 2.205);
+		$this->addMaps('kilogram', array('kg', 'kgs', 'kilo', 'kilos'));
+		$this->addMaps('pound', array('lb', 'lbs'));
+
+		// Centimetres <-> Inches
+		$this->addConversion('centimetre', 'inch', 0.394);
+		$this->addMaps('centimetre', array('cm', 'cms', 'centimeter', 'centimeters'));
+		$this->addMaps('inch', array('in'));
+
+		// Metres <-> Feet
+		$this->addConversion('metre', 'foot', 3.281);
+		$this->addMaps('metre', array('m', 'meter', 'meters'));
+		$this->addMaps('foot', array('ft'));
+
+		// Kilometres <-> Miles
+		$this->addConversion('kilometre', 'mile', 0.621);
+		$this->addMaps('kilometre', array('km', 'kms', 'kilometer', 'kilometers'));
+		$this->addMaps('mile', array('mi'));
+
+		// Litres <-> Gallons
+		$this->addConversion('litre', 'gallon', 0.264);
+		$this->addMaps('litre', array('l', 'liter', 'liters'));
+		$this->addMaps('gallon', array('g'));
+	}
+
+	// PUBLIC INTERFACE
+
+	/**
+	 * Provides singleton access to this object.
+	 *
+	 * @return object A singleton instance of the UnitConverter object.
+	 */
+	public static function getInstance()
+	{
+		static $converter;
+		if (!is_object($converter)) {
+			$converter = new UnitConverter();
+		}
+		return $converter;
+	}
+
+	/**
+	 * Insert's the plugin's stylesheet into the WordPress header.
+	 *
+	 * @return void Does not return anything.
+	 */
+	public static function style()
+	{
+		wp_enqueue_style('UnitConverter', WP_PLUGIN_URL . '/unit-converter/unit-converter.css');
+	}
+
+	/**
+	 * Adds converted units of measurement to the supplied text.
+	 * This should be used with the WordPress add_action function, e.g.
+	 * add_action('the_content', 'UnitConverter::filter');
+	 *
+	 * @param string $content The supplied text to add converted measurements to.
+	 *
+	 * @uses replace
+	 *
+	 * @return string The supplied text with converted measurements added in.
+	 */
+	public static function filter($content)
+	{
+		$converter = self::getInstance();
+		return $converter->replace($content);
+	}
+
+	/**
+	 * Sets options.
+	 *
+	 * @param array $opts An associative array of options.
+	 *
+	 * @return void Does not return anything.
+	 */
+	public static function setOpts($opts)
+	{
+		$converter = self::getInstance();
+		foreach ($opts as $option=>$value) {
+			$converter->$option = $value;
+		}
+	}
+
+
+	// PRIVATE
+
+	/**
+	 * Annotates the detected original measurements with converted measurements.
+	 *
+	 * @param String $content The original content.
+	 *
+	 * @return String The annotated content.
+	 */
+	private function replace($content)
+	{
+		$tokens = $this->tokenise($content);
+		foreach ($tokens as $t) {
+			$converted = $this->format($t['converted']['amount'], $t['converted']['unit']);
+			$replacement = $this->generateReplacement($t['original'], $converted);
+			$original = preg_quote($t['original']);
+			$content = preg_replace("/(?<![\d\.]){$original}/", $replacement, $content);
+		}
+		return $content;
+	}
+
+	/**
+	 * Tokenises the original measurements and provides converted measurements.
+	 *
+	 * @param string $content The original text.
+	 *
+	 * @return array A list of tokens with the appropriate converted measurement.
+	 */
+	private function tokenise($content)
+	{
+		$tokens = array();
+		foreach ($this->maps as $alias=>$type) {
+			$escalias = preg_quote($alias);
+			if (!preg_match_all("/(\d*\.?\d+)\s*($escalias)(?!\w)/i", $content, $matches, PREG_SET_ORDER)) {
+				continue;
+			}
+			$matches = self::unique($matches);
+			foreach ($matches as $match) {
+				$tokens[] = array(
+					'original'  => $match[0],
+					'converted' => $this->convert($match[1], $match[2]),
+					);
+			}
+		}
+		return $tokens;
+	}
+
+	/**
+	 * Detects the current unit being used and switches the amount to the respective metric/imperial unit.
+	 * e.g. 10 metres into 32.81 feet.
+	 *
+	 * @param float $amount The scalar value of the measurement.
+	 * @param string $unit The unit name or abbreviation, e.g. 'kilometre' or 'km'.
+	 *
+	 * @return Array The first element is the converted amount, the second is the canonical unit it was converted to.
+	 */
+	private function convert($amount, $unit)
+	{
+		$convert = $this->getComplementaryUnit($this->getCanonicalUnit($unit));
+		$new_amount = $amount * $convert['multiplier'];
+		$new_amount = round($new_amount, 2); // TODO: configure the DP.
+		return array('amount' => $new_amount, 'unit' => $convert['to']);
+	}
+
+	/**
+	 * Returns the canonical unit when given an abbreviation or alias.
+	 *
+	 * @param string $alias An abbreviation or alias for a unit (e.g. 'km').
+	 *
+	 * @return string The canonical unit name.
+	 */
+	private function getCanonicalUnit($alias)
+	{
+		if (isset($this->maps[$alias])) {
+			return $this->maps[$alias];
+		}
+		die("Can't tell what unit '{$alias} is.");
+	}
+
+	/**
+	 * Obtains the complementary unit and its multiplier.
+	 *
+	 * @param string $unit A canonical unit name, e.g. 'kilometre'.
+	 *
+	 * @return array The canonical unit name of the complementary unit (e.g. 'mile') and its multiplier.
+	 */
+	private function getComplementaryUnit($unit)
+	{
+		if (isset($this->units[$unit])) {
+			return $this->units[$unit];
+		}
+		die("Unit '{$unit}' is not a valid unit.");
+	}
+
+	/**
+	 * Adds a metric <-> imperial conversion mapping.
+	 * It will also add an alias mapping for the canonical name and plural version of the canonical name.
+	 *
+	 * @param string $metric Canonical name of the metric measurement (e.g. 'kilometre').
+	 * @param string $imperial Canonical name of the imperial measurement (e.g. 'mile').
+	 * @param float $multiplier The multiplier to apply to the metric unit to obtain the imperial unit.
+	 *
+	 * @return void Does not return anything.
+	 */
+	private function addConversion($metric, $imperial, $multiplier)
+	{
+		$this->units[$metric] = array(
+			'to' => $imperial,
+			'multiplier' => $multiplier,
+			);
+		$this->units[$imperial] = array(
+			'to' => $metric,
+			'multiplier' => 1/$multiplier,
+			);
+		// Add self and plural version to the map
+		$this->addMaps($metric, array($metric, self::plural($metric)));
+		$this->addMaps($imperial, array($imperial, self::plural($imperial)));
+	}
+
+	/**
+	 * Adds an alias mapping for either a metric or imperial unit.
+	 *
+	 * @param string $unit The canonical name of the unit of measurement (e.g. 'kilometre').
+	 *
+	 * @return void Does not return anything.
+	 */
+	private function addMaps($unit, $aliases)
+	{
+		foreach ($aliases as $alias) {
+			$this->maps[$alias] = $unit;
+		}
+	}
+
+	/**
+	 * Pluralises canonical unit names.
+	 *
+	 * @param string The singular form of the canonical unit name (e.g. 'mile').
+	 *
+	 * @return string The plural form of the canonical unit name (e.g. 'miles').
+	 */
+	private static function plural($singular)
+	{
+		switch ($singular) {
+			case 'foot':
+				return 'feet';
+			case 'inch':
+				return 'inches';
+			default:
+				return $singular . 's';
+		}
+	}
+
+	/**
+	 * Formats the amount with the units, e.g. '10 miles' or '1 mile'.
+	 *
+	 * @param float $amount The scalar value of the measurement.
+	 * @param string The canonical unit name (e.g. 'mile').
+	 *
+	 * @return string The formatted measurement.
+	 */
+	private function format($amount, $unit)
+	{
+		$f_unit = $unit;
+		if ($amount != 1) {
+			$f_unit = self::plural($f_unit);
+		}
+		return $amount . ' ' . $f_unit;
+	}
+
+	/**
+	 * Like array_unique but works for multi-dimensional arrays.
+	 *
+	 * @param array $array A multi-dimensional array.
+	 *
+	 * @return array $array with duplicate sub-arrays removed.
+	 */
+	private static function unique($array)
+	{
+		return array_intersect_key($array, array_unique(array_map('serialize', $array)));
+	}
+
+	private function generateReplacement($original, $converted)
+	{
+		$converted = htmlspecialchars($converted);
+		switch ($this->display_mode) {
+			case 'mouseover':
+				return "<span class=\"unit-converter-help\" title=\"{$converted}\">{$original}</span>";
+				break;
+			default:
+				return "{$original} ({$converted})";
+				break;
+		}
+	}
+}
+
+add_action('the_content', 'UnitConverter::filter');
+add_action('the_content_rss', 'UnitConverter::filter');
+add_action('wp_print_styles', 'UnitConverter::style');
