@@ -57,8 +57,13 @@ class UnitConverter
 
 		// Litres <-> Gallons
 		$this->addConversion('litre', 'gallon', 0.264);
-		$this->addMaps('litre', array('l', 'liter', 'liters'));
+		$this->addMaps('litre', array('L', 'liter', 'liters'));
 		$this->addMaps('gallon', array('g'));
+
+		// Kilojoules <-> Calories
+		$this->addConversion('kilojoule', 'calorie', 239.006);
+		$this->addMaps('kilojoule', array('kj'));
+		$this->addMaps('calorie', array('cal', 'cals'));
 	}
 
 	// PUBLIC INTERFACE
@@ -153,7 +158,7 @@ class UnitConverter
 		$tokens = array();
 		foreach ($this->maps as $alias=>$type) {
 			$escalias = preg_quote($alias);
-			if (!preg_match_all("/(\d*\.?\d+)\s*($escalias)(?!\w)/i", $content, $matches, PREG_SET_ORDER)) {
+			if (!preg_match_all("/(\d*\.?\d+)\s*($escalias)(?!\w)/", $content, $matches, PREG_SET_ORDER)) {
 				continue;
 			}
 			$matches = self::unique($matches);
@@ -196,7 +201,7 @@ class UnitConverter
 		if (isset($this->maps[$alias])) {
 			return $this->maps[$alias];
 		}
-		die("Can't tell what unit '{$alias} is.");
+		die("Can't tell what unit '{$alias}' is.\n");
 	}
 
 	/**
@@ -211,7 +216,7 @@ class UnitConverter
 		if (isset($this->units[$unit])) {
 			return $this->units[$unit];
 		}
-		die("Unit '{$unit}' is not a valid unit.");
+		die("Unit '{$unit}' is not a valid unit.\n");
 	}
 
 	/**
