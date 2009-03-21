@@ -76,4 +76,24 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 		$expected = '5kg (11.03 pounds) 1.5kg (3.31 pounds)';
 		$this->assertEquals($expected, $actual);
 	}
+
+	public function testCaseSensitivity()
+	{
+		$data = '5KG 5L';
+		$actual = UnitConverter::filter($data);
+		$expected = '5KG 5L (1.32 gallons)';
+		$this->assertEquals($expected, $actual);
+		$data = '5kg 5l';
+		$actual = UnitConverter::filter($data);
+		$expected = '5kg (11.03 pounds) 5l';
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testKilojoulesToCalories()
+	{
+		$data = '5 cals 10 kj';
+		$actual = UnitConverter::filter($data);
+		$expected = '5 cals (0.02 kilojoules) 10 kj (2390.06 calories)';
+		$this->assertEquals($expected, $actual);
+	}
 }

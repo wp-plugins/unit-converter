@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: metric, imperial, english, standard, unit, convert
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: trunk
+Stable tag: 0.2
 
 Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
 
@@ -44,13 +44,25 @@ I'm not sure because I haven't tested it on anything earlier. If you use an earl
 * Metres <-> feet
 * Kilometres <-> miles
 * Litres <-> gallons
+* Kilojoules <-> calories
 
 == Bugs ==
 
 * Converted measurements will always be written in their canonical/long name, e.g. 'kilograms' instead of 'kg'.
-* It cannot handle quoted aliases (e.g. 5' or 9") or composite measurements, e.g. 5'9".
+* Cannot handle quoted aliases (e.g. 5' or 9") or composite measurements, e.g. 5'9".
+
+To report any bugs please do so from the [plugin homepage](http://miknight.com/projects/unit-converter/ "Visit the plugin home page").
 
 == Plans ==
 
 * An options page to configure various aspects of the plugin.
 * Auto-detection for which measurement abbreviation to use for the converted unit (lbs -> kg, pounds -> kilograms).
+
+== ChangeLog ==
+
+= 0.2 - 2009-03-22 =
+* Added kilojoule <-> calorie converter.
+* Now require the match text to be case sensitive (e.g. 2L or 5kg only, not 2l or 5KG).
+
+= 0.1 - 2009-03-19 =
+* Initial version.
