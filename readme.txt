@@ -4,13 +4,13 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: metric, imperial, english, standard, unit, convert
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 0.2
+Stable tag: 0.3
 
 Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
 
 == Description ==
 
-This plugin detects units of measurement (e.g. "10 lbs") and will add the metric or imperial equivalent (e.g. "4.5 kilograms"). The converted measurement can be added in several ways:
+This plugin detects units of measurement (e.g. "10 lbs") and will add the metric or non-metric equivalent (e.g. "4.5 kilograms"). The converted measurement can be added in several ways:
 
 * as a mouse-over, or
 * in brackets after the original measurement, e.g. "10 lbs (4.5 kilograms)".
@@ -37,6 +37,10 @@ to
 
 I'm not sure because I haven't tested it on anything earlier. If you use an earlier version and it works, let me know!
 
+= Why does it require PHP 5 when WordPress supports PHP 4? =
+
+It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
+
 == Currently Supported Conversions ==
 
 * Kilograms <-> pounds
@@ -44,7 +48,10 @@ I'm not sure because I haven't tested it on anything earlier. If you use an earl
 * Metres <-> feet
 * Kilometres <-> miles
 * Litres <-> gallons
-* Kilojoules <-> calories
+* Kilojoules <-> (food) calories
+* Grams <-> Ounces
+
+Note that these non-metric units are in [US customary units](http://en.wikipedia.org/wiki/United_States_customary_units).
 
 == Bugs ==
 
@@ -57,8 +64,14 @@ To report any bugs please do so from the [plugin homepage](http://miknight.com/p
 
 * An options page to configure various aspects of the plugin.
 * Auto-detection for which measurement abbreviation to use for the converted unit (lbs -> kg, pounds -> kilograms).
+* An option to use Imperial measurements as distinct from US customary units.
 
 == ChangeLog ==
+
+= 0.3 - 2009-03-24 =
+* Fixed the kilojoule <-> calorie converter (was using calories instead of food calories).
+* Added grams <-> ounces converter.
+* Increased the precision of all conversions.
 
 = 0.2 - 2009-03-22 =
 * Added kilojoule <-> calorie converter.

@@ -36,34 +36,39 @@ class UnitConverter
 	public function __construct()
 	{
 		// Kilograms <-> Pounds
-		$this->addConversion('kilogram', 'pound', 2.205);
+		$this->addConversion('kilogram', 'pound', 2.20462262);
 		$this->addMaps('kilogram', array('kg', 'kgs', 'kilo', 'kilos'));
 		$this->addMaps('pound', array('lb', 'lbs'));
 
 		// Centimetres <-> Inches
-		$this->addConversion('centimetre', 'inch', 0.394);
+		$this->addConversion('centimetre', 'inch', 0.393700787);
 		$this->addMaps('centimetre', array('cm', 'cms', 'centimeter', 'centimeters'));
 		$this->addMaps('inch', array('in'));
 
 		// Metres <-> Feet
-		$this->addConversion('metre', 'foot', 3.281);
+		$this->addConversion('metre', 'foot', 3.2808399);
 		$this->addMaps('metre', array('m', 'meter', 'meters'));
 		$this->addMaps('foot', array('ft'));
 
 		// Kilometres <-> Miles
-		$this->addConversion('kilometre', 'mile', 0.621);
+		$this->addConversion('kilometre', 'mile', 0.621371192);
 		$this->addMaps('kilometre', array('km', 'kms', 'kilometer', 'kilometers'));
 		$this->addMaps('mile', array('mi'));
 
 		// Litres <-> Gallons
-		$this->addConversion('litre', 'gallon', 0.264);
+		$this->addConversion('litre', 'gallon', 0.264172052);
 		$this->addMaps('litre', array('L', 'liter', 'liters'));
-		$this->addMaps('gallon', array('g'));
+		$this->addMaps('gallon', array('gal', 'gals'));
 
 		// Kilojoules <-> Calories
-		$this->addConversion('kilojoule', 'calorie', 239.006);
+		$this->addConversion('kilojoule', 'calorie', 0.239005736);
 		$this->addMaps('kilojoule', array('kj'));
 		$this->addMaps('calorie', array('cal', 'cals'));
+
+		// Grams <-> Ounces
+		$this->addConversion('gram', 'ounce', 0.0352739619);
+		$this->addMaps('gram', array('g'));
+		$this->addMaps('ounce', array('oz'));
 	}
 
 	// PUBLIC INTERFACE

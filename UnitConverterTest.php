@@ -57,7 +57,7 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 	{
 		$data = '1kg 2kg';
 		$actual = UnitConverter::filter($data);
-		$expected = '1kg (2.21 pounds) 2kg (4.41 pounds)';
+		$expected = '1kg (2.2 pounds) 2kg (4.41 pounds)';
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -65,7 +65,7 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 	{
 		$data = '1kg (2kg) 3kg.';
 		$actual = UnitConverter::filter($data);
-		$expected = '1kg (2.21 pounds) (2kg (4.41 pounds)) 3kg (6.62 pounds).';
+		$expected = '1kg (2.2 pounds) (2kg (4.41 pounds)) 3kg (6.61 pounds).';
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -73,7 +73,7 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 	{
 		$data = '5kg 1.5kg';
 		$actual = UnitConverter::filter($data);
-		$expected = '5kg (11.03 pounds) 1.5kg (3.31 pounds)';
+		$expected = '5kg (11.02 pounds) 1.5kg (3.31 pounds)';
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -85,7 +85,7 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $actual);
 		$data = '5kg 5l';
 		$actual = UnitConverter::filter($data);
-		$expected = '5kg (11.03 pounds) 5l';
+		$expected = '5kg (11.02 pounds) 5l';
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -93,7 +93,15 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 	{
 		$data = '5 cals 10 kj';
 		$actual = UnitConverter::filter($data);
-		$expected = '5 cals (0.02 kilojoules) 10 kj (2390.06 calories)';
+		$expected = '5 cals (20.92 kilojoules) 10 kj (2.39 calories)';
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGramsToOunces()
+	{
+		$data = '5 g 10 oz';
+		$actual = UnitConverter::filter($data);
+		$expected = '5 g (0.18 ounces) 10 oz (283.5 grams)';
 		$this->assertEquals($expected, $actual);
 	}
 }
