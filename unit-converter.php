@@ -3,7 +3,7 @@
 Plugin Name: Unit Converter
 Plugin URI: http://miknight.com/projects/unit-converter
 Description: Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
-Version: 0.1
+Version: 0.2
 Author: Michael Knight
 Author URI: http://miknight.com
 
@@ -36,29 +36,39 @@ class UnitConverter
 	public function __construct()
 	{
 		// Kilograms <-> Pounds
-		$this->addConversion('kilogram', 'pound', 2.205);
+		$this->addConversion('kilogram', 'pound', 2.20462262);
 		$this->addMaps('kilogram', array('kg', 'kgs', 'kilo', 'kilos'));
 		$this->addMaps('pound', array('lb', 'lbs'));
 
 		// Centimetres <-> Inches
-		$this->addConversion('centimetre', 'inch', 0.394);
+		$this->addConversion('centimetre', 'inch', 0.393700787);
 		$this->addMaps('centimetre', array('cm', 'cms', 'centimeter', 'centimeters'));
 		$this->addMaps('inch', array('in'));
 
 		// Metres <-> Feet
-		$this->addConversion('metre', 'foot', 3.281);
+		$this->addConversion('metre', 'foot', 3.2808399);
 		$this->addMaps('metre', array('m', 'meter', 'meters'));
 		$this->addMaps('foot', array('ft'));
 
 		// Kilometres <-> Miles
-		$this->addConversion('kilometre', 'mile', 0.621);
+		$this->addConversion('kilometre', 'mile', 0.621371192);
 		$this->addMaps('kilometre', array('km', 'kms', 'kilometer', 'kilometers'));
 		$this->addMaps('mile', array('mi'));
 
 		// Litres <-> Gallons
-		$this->addConversion('litre', 'gallon', 0.264);
-		$this->addMaps('litre', array('l', 'liter', 'liters'));
-		$this->addMaps('gallon', array('g'));
+		$this->addConversion('litre', 'gallon', 0.264172052);
+		$this->addMaps('litre', array('L', 'liter', 'liters'));
+		$this->addMaps('gallon', array('gal', 'gals'));
+
+		// Kilojoules <-> Calories
+		$this->addConversion('kilojoule', 'calorie', 0.239005736);
+		$this->addMaps('kilojoule', array('kj'));
+		$this->addMaps('calorie', array('cal', 'cals'));
+
+		// Grams <-> Ounces
+		$this->addConversion('gram', 'ounce', 0.0352739619);
+		$this->addMaps('gram', array('g'));
+		$this->addMaps('ounce', array('oz'));
 	}
 
 	// PUBLIC INTERFACE
@@ -153,7 +163,7 @@ class UnitConverter
 		$tokens = array();
 		foreach ($this->maps as $alias=>$type) {
 			$escalias = preg_quote($alias);
-			if (!preg_match_all("/(\d*\.?\d+)\s*($escalias)(?!\w)/i", $content, $matches, PREG_SET_ORDER)) {
+			if (!preg_match_all("/(\d*\.?\d+)\s*($escalias)(?!\w)/", $content, $matches, PREG_SET_ORDER)) {
 				continue;
 			}
 			$matches = self::unique($matches);
@@ -196,7 +206,7 @@ class UnitConverter
 		if (isset($this->maps[$alias])) {
 			return $this->maps[$alias];
 		}
-		die("Can't tell what unit '{$alias} is.");
+		die("Can't tell what unit '{$alias}' is.\n");
 	}
 
 	/**
@@ -211,7 +221,7 @@ class UnitConverter
 		if (isset($this->units[$unit])) {
 			return $this->units[$unit];
 		}
-		die("Unit '{$unit}' is not a valid unit.");
+		die("Unit '{$unit}' is not a valid unit.\n");
 	}
 
 	/**
