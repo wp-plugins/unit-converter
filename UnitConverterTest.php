@@ -104,4 +104,12 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 		$expected = '5 g (0.18 ounces) 10 oz (283.5 grams)';
 		$this->assertEquals($expected, $actual);
 	}
+
+	public function testMillilitresToFluidOunces()
+	{
+		$data = '5 mL 10 fl oz';
+		$actual = UnitConverter::filter($data);
+		$expected = '5 mL (0.17 fluid ounces) 10 fl oz (295.74 millilitres)';
+		$this->assertEquals($expected, $actual);
+	}
 }

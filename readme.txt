@@ -1,12 +1,12 @@
 === Plugin Name ===
 Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
-Tags: metric, imperial, english, standard, unit, convert
+Tags: metric, customary, imperial, standard, unit, convert, text, cooking, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: 0.3
+Tested up to: 2.8
+Stable tag: 0.4
 
-Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
+Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
 
 == Description ==
 
@@ -49,7 +49,8 @@ It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
 * Kilometres <-> miles
 * Litres <-> gallons
 * Kilojoules <-> (food) calories
-* Grams <-> Ounces
+* Grams <-> ounces
+* Millilitres <-> fluid ounces
 
 Note that these non-metric units are in [US customary units](http://en.wikipedia.org/wiki/United_States_customary_units).
 
@@ -67,6 +68,10 @@ To report any bugs please do so from the [plugin homepage](http://miknight.com/p
 * An option to use Imperial measurements as distinct from US customary units.
 
 == ChangeLog ==
+
+= 0.4 - 2009-06-12 =
+* Added millilitre <-> fluid ounce converter.
+* Tested up to WordPress 2.8.
 
 = 0.3 - 2009-03-24 =
 * Fixed the kilojoule <-> calorie converter (was using calories instead of food calories).

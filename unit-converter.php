@@ -2,12 +2,12 @@
 /*
 Plugin Name: Unit Converter
 Plugin URI: http://miknight.com/projects/unit-converter
-Description: Detects units of measurement in your blog text and automatically displays the metric or imperial equivalent in one of several possible ways.
-Version: 0.3
+Description: Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
+Version: 0.4
 Author: Michael Knight
 Author URI: http://miknight.com
 
-Copyright 2009 Michael Knight <mike@nerdforce.net>
+Copyright 2009 Michael Knight <jedimike@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -69,6 +69,11 @@ class UnitConverter
 		$this->addConversion('gram', 'ounce', 0.0352739619);
 		$this->addMaps('gram', array('g'));
 		$this->addMaps('ounce', array('oz'));
+
+		// Millilitres <-> Fluid Ounces
+		$this->addConversion('millilitre', 'fluid ounce', 0.0338140227);
+		$this->addMaps('millilitre', array('mL'));
+		$this->addMaps('fluid ounce', array('fl oz', 'fl. oz.', 'oz. fl.'));
 	}
 
 	// PUBLIC INTERFACE
