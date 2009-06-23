@@ -17,31 +17,7 @@ This plugin detects units of measurement (e.g. "10 lbs") and will add the metric
 
 It is useful if you use lots of measurements and are writing for an international audience.
 
-== Installation ==
-
-1. Upload the `unit-converter/` directory to the `/wp-content/plugins/` directory,
-1. Activate the plugin through the 'Plugins' menu in WordPress.
-
-== Frequently Asked Questions ==
-
-= The mouseover method is the default. How do I use the parentheses? =
-
-As there is no options page (yet), you will need to edit the `/wp-content/plugins/unit-converter.php` file around line 31 and change:
-
-`$display_mode = 'mouseover';`
-to
-
-`$display_mode = 'parentheses';`
-
-= Does it really require WordPress 2.7? =
-
-I'm not sure because I haven't tested it on anything earlier. If you use an earlier version and it works, let me know!
-
-= Why does it require PHP 5 when WordPress supports PHP 4? =
-
-It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
-
-== Currently Supported Conversions ==
+= Currently Supported Conversions =
 
 * Kilograms <-> pounds
 * Centimetres <-> inches
@@ -54,20 +30,12 @@ It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
 
 Note that these non-metric units are in [US customary units](http://en.wikipedia.org/wiki/United_States_customary_units).
 
-== Bugs ==
+== Installation ==
 
-* Converted measurements will always be written in their canonical/long name, e.g. 'kilograms' instead of 'kg'.
-* Cannot handle quoted aliases (e.g. 5' or 9") or composite measurements, e.g. 5'9".
+1. Upload the `unit-converter/` directory to the `/wp-content/plugins/` directory,
+1. Activate the plugin through the 'Plugins' menu in WordPress.
 
-To report any bugs please do so from the [plugin homepage](http://miknight.com/projects/unit-converter/ "Visit the plugin home page").
-
-== Plans ==
-
-* An options page to configure various aspects of the plugin.
-* Auto-detection for which measurement abbreviation to use for the converted unit (lbs -> kg, pounds -> kilograms).
-* An option to use Imperial measurements as distinct from US customary units.
-
-== ChangeLog ==
+== Changelog ==
 
 = 0.4 - 2009-06-12 =
 * Added millilitre <-> fluid ounce converter.
@@ -84,3 +52,36 @@ To report any bugs please do so from the [plugin homepage](http://miknight.com/p
 
 = 0.1 - 2009-03-19 =
 * Initial version.
+
+== Frequently Asked Questions ==
+
+= The mouseover method is the default. How do I use the parentheses? =
+
+As there is no options page (yet), you will need to edit the `/wp-content/plugins/unit-converter.php` file around line 31 and change:
+
+`$display_mode = 'mouseover';`
+
+to
+
+`$display_mode = 'parentheses';`
+
+= Does it really require WordPress 2.7? =
+
+I'm not sure because I haven't tested it on anything earlier. If you use an earlier version and it works, let me know!
+
+= Why does it require PHP 5 when WordPress supports PHP 4? =
+
+It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
+
+== Bugs ==
+
+* Converted measurements will always be written in their canonical/long name, e.g. 'kilograms' instead of 'kg'.
+* Cannot handle quoted aliases (e.g. 5' or 9") or composite measurements, e.g. 5'9".
+
+To report any bugs please do so from the [plugin homepage](http://miknight.com/projects/unit-converter/ "Visit the plugin home page").
+
+== Plans ==
+
+* An options page to configure various aspects of the plugin.
+* Auto-detection for which measurement abbreviation to use for the converted unit (lbs -> kg, pounds -> kilograms).
+* An option to use Imperial measurements as distinct from US customary units.
