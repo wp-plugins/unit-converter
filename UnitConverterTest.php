@@ -112,4 +112,32 @@ class UnitConverterTest extends PHPUnit_Framework_TestCase
 		$expected = '5 mL (0.17 fluid ounces) 10 fl oz (295.74 millilitres)';
 		$this->assertEquals($expected, $actual);
 	}
+
+	public function testCelsiusToFahrenheit()
+	{
+		$data = '5 C 10 F';
+		$actual = UnitConverter::filter($data);
+		$expected = '5 C (41 degrees Fahrenheit) 10 F (-12.22 degrees Celsius)';
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testDegreeSymbols()
+	{
+		// Test regular degrees symbol.
+		$data = '5°C';
+		$actual = UnitConverter::filter($data);
+		$expected = '5°C (41 degrees Fahrenheit)';
+		$this->assertEquals($expected, $actual);
+		// Test HTML entity.
+		$data = '5&deg;C';
+		$actual = UnitConverter::filter($data);
+		$expected = '5&deg;C (41 degrees Fahrenheit)';
+		$this->assertEquals($expected, $actual);
+		// Test Unicode symbol of each.
+		$data = '5℃ 10℉';
+		$actual = UnitConverter::filter($data);
+		$expected = '5℃ (41 degrees Fahrenheit) 10℉ (-12.22 degrees Celsius)';
+		$this->assertEquals($expected, $actual);
+
+	}
 }

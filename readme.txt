@@ -3,8 +3,8 @@ Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
 Tags: metric, customary, imperial, standard, unit, convert, text, cooking, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 2.8.1
-Stable tag: 0.4
+Tested up to: 2.8.2
+Stable tag: 0.5
 
 Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
 
@@ -19,13 +19,14 @@ It is useful if you use lots of measurements and are writing for an internationa
 
 = Currently Supported Conversions =
 
-* Kilograms <-> pounds
+* Celsius <-> Fahrenheit
 * Centimetres <-> inches
-* Metres <-> feet
-* Kilometres <-> miles
-* Litres <-> gallons
-* Kilojoules <-> (food) calories
 * Grams <-> ounces
+* Kilograms <-> pounds
+* Kilometres <-> miles
+* Kilojoules <-> (food) calories
+* Litres <-> gallons
+* Metres <-> feet
 * Millilitres <-> fluid ounces
 
 Note that these non-metric units are in [US customary units](http://en.wikipedia.org/wiki/United_States_customary_units).
@@ -36,6 +37,10 @@ Note that these non-metric units are in [US customary units](http://en.wikipedia
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
+
+= 0.5 - 2009-07-26 =
+* Added Celsius <-> Fahrenheit converter.
+* Tested up to WordPress 2.8.2.
 
 = 0.4 - 2009-06-12 =
 * Added millilitre <-> fluid ounce converter.

@@ -3,7 +3,7 @@
 Plugin Name: Unit Converter
 Plugin URI: http://miknight.com/projects/unit-converter
 Description: Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
-Version: 0.4
+Version: 0.5
 Author: Michael Knight
 Author URI: http://miknight.com
 
@@ -74,6 +74,16 @@ class UnitConverter
 		$this->addConversion('millilitre', 'fluid ounce', 0.0338140227);
 		$this->addMaps('millilitre', array('mL'));
 		$this->addMaps('fluid ounce', array('fl oz', 'fl. oz.', 'oz. fl.'));
+
+		// Celsius <-> Fahrenheit
+		$this->addConversionFunc(
+			'degree Celsius',
+			'degree Fahrenheit',
+			create_function('$c', 'return $c * (9/5) + 32;'),
+			create_function('$f', 'return ($f - 32) * (5/9);')
+		);
+		$this->addMaps('degree Celsius', array('C', '°C', '℃'));
+		$this->addMaps('degree Fahrenheit', array('F', '°F', '℉'));
 	}
 
 	// PUBLIC INTERFACE
@@ -194,7 +204,13 @@ class UnitConverter
 	private function convert($amount, $unit)
 	{
 		$convert = $this->getComplementaryUnit($this->getCanonicalUnit($unit));
-		$new_amount = $amount * $convert['multiplier'];
+		if (isset($convert['multiplier'])) {
+			$new_amount = $amount * $convert['multiplier'];
+		} elseif ($convert['func']) {
+			$new_amount = call_user_func($convert['func'], $amount);
+		} else {
+			die("Unit '{$unit}' has no multiplier or function for conversion.");
+		}
 		$new_amount = round($new_amount, 2); // TODO: configure the DP.
 		return array('amount' => $new_amount, 'unit' => $convert['to']);
 	}
@@ -230,8 +246,22 @@ class UnitConverter
 	}
 
 	/**
-	 * Adds a metric <-> imperial conversion mapping.
-	 * It will also add an alias mapping for the canonical name and plural version of the canonical name.
+	 * Adds alias mappings for the canonical name of a unit and plural version of the canonical name.
+	 *
+	 * @param string $metric Canonical name of the metric measurement (e.g. 'kilometre').
+	 * @param string $imperial Canonical name of the imperial measurement (e.g. 'mile').
+	 *
+	 * @return void Does not return anything.
+	 */
+	private function addSelfMappings($metric, $imperial)
+	{
+		// Add self and plural version to the map
+		$this->addMaps($metric, array($metric, self::plural($metric)));
+		$this->addMaps($imperial, array($imperial, self::plural($imperial)));
+	}
+
+	/**
+	 * Adds a metric <-> imperial conversion multiplier mapping.
 	 *
 	 * @param string $metric Canonical name of the metric measurement (e.g. 'kilometre').
 	 * @param string $imperial Canonical name of the imperial measurement (e.g. 'mile').
@@ -249,9 +279,29 @@ class UnitConverter
 			'to' => $metric,
 			'multiplier' => 1/$multiplier,
 			);
-		// Add self and plural version to the map
-		$this->addMaps($metric, array($metric, self::plural($metric)));
-		$this->addMaps($imperial, array($imperial, self::plural($imperial)));
+		$this->addSelfMappings($metric, $imperial);
+	}
+
+	/**
+	 * Adds a metric <-> imperial conversion with functions instead of a multiplier.
+	 *
+	 * @param string $metric Canonical name of the metric measurement (e.g. 'kilometre').
+	 * @param string $imperial Canonical name of the imperial measurement (e.g. 'mile').
+	 * @param string $metric The multiplier to apply to the metric unit to obtain the imperial unit.
+	 *
+	 * @return void Does not return anything.
+	 */
+	private function addConversionFunc($metric, $imperial, $met_to_imp, $imp_to_met)
+	{
+		$this->units[$metric] = array(
+			'to' => $imperial,
+			'func' => $met_to_imp,
+			);
+		$this->units[$imperial] = array(
+			'to' => $metric,
+			'func' => $imp_to_met,
+			);
+		$this->addSelfMappings($metric, $imperial);
 	}
 
 	/**
@@ -265,6 +315,11 @@ class UnitConverter
 	{
 		foreach ($aliases as $alias) {
 			$this->maps[$alias] = $unit;
+			// In order to detect the mapping in HTML, it may be necessary to check the HTML entity version of the unit.
+			$alias_html = htmlentities(utf8_decode($alias));
+			if ($alias_html != $alias) {
+				$this->maps[$alias_html] = $unit;
+			}
 		}
 	}
 
@@ -278,6 +333,9 @@ class UnitConverter
 	private static function plural($singular)
 	{
 		switch ($singular) {
+			case 'degree Celsius':
+			case 'degree Fahrenheit':
+				return str_replace('degree', 'degrees', $singular);
 			case 'foot':
 				return 'feet';
 			case 'inch':
@@ -316,6 +374,14 @@ class UnitConverter
 		return array_intersect_key($array, array_unique(array_map('serialize', $array)));
 	}
 
+	/**
+	 * Generates the text to insert in place of the original text.
+	 *
+	 * @param string $original The original measurement.
+	 * @param string $converted The converted measurement.
+	 *
+	 * @return string The resulting text containing the original measurement with the converted measurement.
+	 */
 	private function generateReplacement($original, $converted)
 	{
 		$converted = htmlspecialchars($converted);
@@ -330,6 +396,7 @@ class UnitConverter
 	}
 }
 
+// Hook in the plugin to the following WordPress actions.
 add_action('the_content', 'UnitConverter::filter');
 add_action('the_content_rss', 'UnitConverter::filter');
 add_action('wp_print_styles', 'UnitConverter::style');
