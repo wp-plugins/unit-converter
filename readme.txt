@@ -3,7 +3,7 @@ Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
 Tags: metric, customary, imperial, standard, unit, convert, text, cooking, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 2.8.2
+Tested up to: 2.8.4
 Stable tag: 0.5
 
 Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
