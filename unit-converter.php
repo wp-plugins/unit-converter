@@ -3,7 +3,7 @@
 Plugin Name: Unit Converter
 Plugin URI: http://miknight.com/projects/unit-converter
 Description: Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
-Version: 0.5
+Version: 0.5.1
 Author: Michael Knight
 Author URI: http://miknight.com
 

@@ -3,8 +3,8 @@ Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
 Tags: metric, customary, imperial, standard, unit, convert, text, cooking, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 2.8.4
-Stable tag: 0.5
+Tested up to: 2.9
+Stable tag: 0.5.1
 
 Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
 
@@ -37,6 +37,9 @@ Note that these non-metric units are in [US customary units](http://en.wikipedia
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
+
+= 0.5.1 - 2009-12-19 =
+* Tested up to WordPress 2.9.
 
 = 0.5 - 2009-07-26 =
 * Added Celsius <-> Fahrenheit converter.
