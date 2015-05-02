@@ -316,7 +316,7 @@ class UnitConverter
 		foreach ($aliases as $alias) {
 			$this->maps[$alias] = $unit;
 			// In order to detect the mapping in HTML, it may be necessary to check the HTML entity version of the unit.
-			$alias_html = htmlentities(utf8_decode($alias));
+			$alias_html = htmlentities($alias, UTF-8);
 			if ($alias_html != $alias) {
 				$this->maps[$alias_html] = $unit;
 			}
