@@ -1,5 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
 
 // Stub the WordPress functions called.
 function add_action() {}

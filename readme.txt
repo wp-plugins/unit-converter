@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
-Tags: metric, customary, imperial, standard, unit, convert, text, cooking, nutrition, fitness
+Tags: metric, customary, imperial, standard, unit, convert, text, cooking, recipes, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 2.9
-Stable tag: 0.5.1
+Tested up to: 4.2.1
+Stable tag: 0.5.2
 
 Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
 
@@ -37,6 +37,10 @@ Note that these non-metric units are in [US customary units](http://en.wikipedia
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
+
+= 0.5.2 - 2014-05-02 =
+* Fixed compatibility with PHP 5.4+.
+* Tested up to WordPress 4.2.1.
 
 = 0.5.1 - 2009-12-19 =
 * Tested up to WordPress 2.9.
@@ -72,14 +76,6 @@ As there is no options page (yet), you will need to edit the `/wp-content/plugin
 to
 
 `$display_mode = 'parentheses';`
-
-= Does it really require WordPress 2.7? =
-
-I'm not sure because I haven't tested it on anything earlier. If you use an earlier version and it works, let me know!
-
-= Why does it require PHP 5 when WordPress supports PHP 4? =
-
-It's time to move forward. See [GoPHP5.org](http://www.gophp5.org/) for more.
 
 == Bugs ==
 
