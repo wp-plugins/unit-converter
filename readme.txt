@@ -3,8 +3,8 @@ Contributors: miknight
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4076962
 Tags: metric, customary, imperial, standard, unit, convert, text, cooking, recipes, nutrition, fitness
 Requires at least: 2.7
-Tested up to: 4.2.1
-Stable tag: 0.5.2
+Tested up to: 4.2.2
+Stable tag: 0.5.3
 
 Detects units of measurement in your blog text and automatically displays the metric or US customary equivalent in one of several possible ways.
 
@@ -37,6 +37,10 @@ Note that these non-metric units are in [US customary units](http://en.wikipedia
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
+
+= 0.5.3 - 2014-05-23 =
+* Bump version properly so WordPress picks it up.
+* Tested up to WordPress 4.2.2.
 
 = 0.5.2 - 2014-05-02 =
 * Fixed compatibility with PHP 5.4+.
